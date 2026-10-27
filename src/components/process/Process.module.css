@@ -1,0 +1,121 @@
+/*
+ * The process section: a tall track you scroll through while the stage holds
+ * still under the header; each stretch of the track opens the next phase.
+ */
+
+.shell {
+  padding-block: clamp(4.5rem, 10vw, 8rem);
+}
+
+.track {
+  position: relative;
+  height: 420vh;
+}
+
+.stage {
+  position: sticky;
+  top: clamp(4.5rem, 5.5vw, 6rem);
+  height: calc(100svh - clamp(4.5rem, 5.5vw, 6rem));
+  display: grid;
+  align-content: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 12rem) minmax(0, 1fr);
+  gap: 2.4rem;
+}
+
+/* The six phase words down the start side; the open one is green. */
+.tabs {
+  display: grid;
+  align-content: start;
+  gap: 0.2rem;
+}
+
+.tab {
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: start;
+  cursor: pointer;
+  font: 700 1.5rem/0.95 var(--font-space), system-ui, sans-serif;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: rgb(233 255 246 / 0.28);
+  transition: color 0.4s;
+}
+
+.tab:hover {
+  color: rgb(233 255 246 / 0.55);
+}
+
+.tab[aria-current] {
+  color: #2fd08a;
+}
+
+.tab:focus-visible {
+  outline: 2px solid #2fd08a;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.open {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.word {
+  font: 700 clamp(3rem, 8vw, 7rem)/0.95 var(--font-space), system-ui, sans-serif;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.step {
+  display: grid;
+  gap: 0.5rem;
+  padding-top: 0.8rem;
+  border-top: 2px solid #b9f3d6;
+}
+
+.step[data-track="software"] {
+  border-top-color: #2fd08a;
+}
+
+.stepTitle {
+  font: 600 1.2rem/1.2 var(--font-space), system-ui, sans-serif;
+  color: #fff;
+}
+
+.stepText {
+  font: 400 0.95rem/1.6 var(--font-sans), system-ui, sans-serif;
+  color: rgb(233 255 246 / 0.66);
+}
+
+/* Space Grotesk has no Arabic, and negative tracking breaks a connected script. */
+html[lang="ar"] .tab,
+html[lang="ar"] .word,
+html[lang="ar"] .stepTitle,
+html[lang="ar"] .stepText {
+  font-family: var(--font-arabic), system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

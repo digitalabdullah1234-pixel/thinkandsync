@@ -1,0 +1,65 @@
+/*
+ * The pointer bloom. Two nested layers, and the split is load-bearing:
+ *
+ *   .follow  carries POSITION only — one translate3d, rewritten each frame
+ *   .glow    carries SCALE only — the hover and press states
+ *
+ * They are separate elements because CSS composes the individual transform
+ * properties as translate -> rotate -> scale -> transform. Putting a `scale`
+ * on the same element as a `transform` translation multiplies that
+ * translation, which is precisely how this layer once threw the drawn cursor
+ * 2.1x away from the real pointer. Nesting makes that impossible: each
+ * element's transform is applied in its own right.
+ *
+ * Neither layer ever takes pointer events — the system cursor is the real
+ * cursor, and this only decorates it.
+ */
+
+.follow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9998;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+  /* The transform is rewritten every frame; promote once and keep it there. */
+  will-change: transform;
+  transition: opacity 180ms ease-out;
+}
+
+.glow {
+  position: absolute;
+  /* Centred on the origin, so the loop can write a raw pointer coordinate
+     into translate3d with no arithmetic per frame. */
+  top: -1.375rem;
+  left: -1.375rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: calc(infinity * 1px); /* = Tailwind rounded-full, one value site-wide */
+  pointer-events: none;
+  background: radial-gradient(
+    circle at center,
+    rgba(16, 152, 90, 0.5) 0%,
+    rgba(16, 152, 90, 0.26) 40%,
+    rgba(16, 152, 90, 0) 72%
+  );
+  filter: blur(6px);
+  transform: scale(1);
+  transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Over something clickable the bloom swells, so the affordance still reads
+   without anything being drawn on top of the target. */
+.hot {
+  transform: scale(1.5);
+}
+
+.down {
+  transform: scale(0.8);
+}
+
+:root[data-motion="reduce"] .glow {
+  transition: none;
+}

@@ -1,0 +1,268 @@
+/*
+ * The privacy policy page. A night band for the title (the header reads
+ * white over it, as over the hero), then the policy on the paper ground:
+ * numbered parts between hairlines, and a contents list held beside them.
+ */
+
+/* ------------------------------------------------------------------ title */
+
+.hero {
+  padding-block: clamp(8.5rem, 16vw, 12rem) clamp(3.5rem, 7vw, 6rem);
+  color: #ffffff;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-space), system-ui, sans-serif;
+  font-size: clamp(3rem, 1.6rem + 6vw, 7rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.updated {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.75rem 0 0;
+  font: 500 0.72rem / 1.3 ui-monospace, "SF Mono", Consolas, monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-night-muted);
+}
+
+/* The logo's green square. */
+.updated i {
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--color-night-mint);
+}
+
+.intro {
+  margin: 1.4rem 0 0;
+  max-width: 40rem;
+  font-size: clamp(1.05rem, 1rem + 0.4vw, 1.3rem);
+  line-height: 1.6;
+  color: rgb(255 255 255 / 0.8);
+}
+
+/* ------------------------------------------------------------------- body */
+
+.body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  padding-block: clamp(3.5rem, 7vw, 6.5rem);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+  gap: clamp(2.5rem, 7vw, 7rem);
+  align-items: start;
+}
+
+.toc {
+  position: sticky;
+  top: clamp(6rem, 12vh, 7.5rem);
+}
+
+.tocHead,
+.tocN,
+.n {
+  font: 500 0.7rem / 1.3 ui-monospace, "SF Mono", Consolas, monospace;
+  letter-spacing: 0.14em;
+}
+
+.tocHead {
+  display: block;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.toc ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-inline-start: 1px solid var(--color-hairline);
+}
+
+.tocLink {
+  position: relative;
+  display: flex;
+  gap: 0.75rem;
+  padding-block: 0.55rem;
+  padding-inline-start: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+
+/* The green bar that marks the part being read. */
+.tocLink::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: -1px;
+  top: 0.45rem;
+  bottom: 0.45rem;
+  width: 2px;
+  background: var(--color-emerald);
+  transform: scaleY(0);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tocLink:hover,
+.tocLink[aria-current] {
+  color: var(--color-ink);
+}
+
+.tocLink[aria-current]::before {
+  transform: scaleY(1);
+}
+
+.tocN {
+  padding-top: 0.2em;
+  opacity: 0.7;
+}
+
+.article {
+  max-width: 46rem;
+}
+
+.part {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 0 1rem;
+  padding-block: clamp(1.8rem, 3.5vw, 2.6rem);
+  border-top: 1px solid var(--color-hairline);
+  scroll-margin-top: 6.5rem;
+}
+
+.part:first-child {
+  border-top-color: var(--color-ink);
+}
+
+.n {
+  padding-top: 0.6em;
+  color: var(--color-emerald);
+}
+
+.h2 {
+  margin: 0 0 0.9rem;
+  font-family: var(--font-space), system-ui, sans-serif;
+  font-size: clamp(1.3rem, 1.05rem + 0.8vw, 1.7rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.p {
+  margin: 0;
+  font-size: clamp(1rem, 0.97rem + 0.15vw, 1.08rem);
+  line-height: 1.75;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+
+.p + .p {
+  margin-top: 0.9rem;
+}
+
+.mail {
+  color: var(--color-ink);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: var(--color-emerald);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  transition: color 0.25s;
+}
+
+.mail:hover {
+  color: var(--color-emerald);
+}
+
+/* ------------------------------------------------------------- the ask */
+
+.ask {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  padding: clamp(1.6rem, 3.5vw, 2.4rem);
+  border-radius: 18px;
+  background: var(--color-night);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.askTitle {
+  font-family: var(--font-space), system-ui, sans-serif;
+  font-size: clamp(1.3rem, 1rem + 1vw, 1.8rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.askText {
+  color: var(--color-night-muted);
+}
+
+.askMail {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-self: start;
+  margin-top: 0.8rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-night-mint);
+}
+
+.askMail svg {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ask:hover .askMail svg {
+  transform: translate(3px, -3px);
+}
+
+.ask:focus-visible,
+.tocLink:focus-visible,
+.mail:focus-visible {
+  outline: 2px solid var(--color-emerald);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ----------------------------------------------------------------- Arabic */
+
+/* Space Grotesk has no Arabic, and tracking breaks a connected script. */
+html[lang="ar"] :is(.title, .h2, .askTitle) {
+  font-family: var(--font-arabic), system-ui, sans-serif;
+  letter-spacing: 0;
+  line-height: 1.3;
+}
+
+html[lang="ar"] :is(.updated, .tocHead) {
+  font-family: var(--font-arabic), system-ui, sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ------------------------------------------------------------------ phone */
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .toc {
+    display: none;
+  }
+
+  .part {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+  }
+}

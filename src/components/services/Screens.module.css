@@ -1,0 +1,1645 @@
+/*
+ * The live screens inside the service cards. Each one fills the card's dark
+ * screen box and lays out by that box's width (container queries), so the
+ * same screen works as a big tile, a half tile and a phone-width card.
+ *
+ * Screens stay in English and left-to-right in both languages: they are
+ * pictures of software, not page copy.
+ */
+
+.root {
+  --mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, monospace;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #cbd5e1;
+}
+
+/* ============================================================= software */
+
+.soft {
+  display: flex;
+  flex-direction: column;
+}
+
+.chrome {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgb(255 255 255 / 0.06);
+  background: #0f141b;
+}
+
+.chrome > i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2a313a;
+}
+
+.url {
+  flex: 1;
+  max-width: 340px;
+  margin-left: 10px;
+  padding: 4px 10px;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.06);
+  border-radius: 7px;
+  background: #0a0e13;
+  font: 11px var(--mono);
+  color: #8a94a3;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.softBody {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.side {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 58px;
+  padding-top: 16px;
+  border-right: 1px solid rgb(255 255 255 / 0.05);
+  background: #0d1218;
+}
+
+.logo {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+  box-shadow: 0 6px 18px -6px #8b5cf6;
+}
+
+.nav {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: rgb(255 255 255 / 0.05);
+}
+
+.navOn {
+  background: rgb(139 92 246 / 0.25);
+  box-shadow: inset 0 0 0 1px rgb(167 139 250 / 0.5);
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 18px;
+}
+
+.top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.top small {
+  display: block;
+  font-size: 11px;
+  color: #6b7482;
+}
+
+.top strong {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-space), system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pill {
+  padding: 5px 10px;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 8px;
+  font-size: 11px;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.deploy {
+  position: relative;
+  overflow: hidden;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  box-shadow: 0 10px 24px -10px #8b5cf6;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin: -5px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.6);
+  opacity: 0;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.kpi {
+  padding: 10px 12px;
+  border: 1px solid rgb(255 255 255 / 0.06);
+  border-radius: 12px;
+  background: #10161e;
+}
+
+.kpi small {
+  display: block;
+  font-size: 10.5px;
+  color: #6b7482;
+  white-space: nowrap;
+}
+
+.kpi b {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--font-space), system-ui, sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #f8fafc;
+  white-space: nowrap;
+}
+
+.kpi em {
+  font-size: 10.5px;
+  font-style: normal;
+  font-weight: 600;
+  color: #34d399;
+}
+
+/* Takes whatever height is left, so the table's four rows always fit. */
+.chart {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.06);
+  border-radius: 12px;
+  background: #0e141b;
+}
+
+.chart svg {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 12px);
+}
+
+.legend {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  display: flex;
+  gap: 12px;
+  font-size: 10px;
+  color: #8a94a3;
+}
+
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend i {
+  width: 10px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.chartDot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow:
+    0 0 0 4px rgb(139 92 246 / 0.45),
+    0 0 16px #a78bfa;
+}
+
+.chartTip {
+  position: absolute;
+  padding: 3px 7px;
+  border: 1px solid rgb(167 139 250 / 0.5);
+  border-radius: 6px;
+  background: rgb(76 29 149 / 0.92);
+  font: 600 10.5px var(--mono);
+  color: #ede9fe;
+  white-space: nowrap;
+  translate: -100% -170%;
+}
+
+/* Exactly four rows tall; a row leaving is clipped as it slides out. */
+.table {
+  position: relative;
+  flex: none;
+  height: 124px;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.06);
+  border-radius: 12px;
+  background: #0e141b;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto 64px;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 31px;
+  padding: 0 12px;
+  border-bottom: 1px solid rgb(255 255 255 / 0.04);
+  font-size: 11.5px;
+  color: #cbd5e1;
+}
+
+.avatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+}
+
+.rowName {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.statusOk,
+.statusWait {
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.statusOk {
+  background: rgb(16 185 129 / 0.14);
+  color: #6ee7b7;
+}
+
+.statusWait {
+  background: rgb(245 158 11 / 0.14);
+  color: #fcd34d;
+}
+
+.rowAge {
+  font-size: 10.5px;
+  color: #6b7482;
+  text-align: right;
+}
+
+.cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 6;
+  width: 18px;
+  height: 18px;
+  opacity: 0;
+  filter: drop-shadow(0 3px 6px rgb(0 0 0 / 0.6));
+  pointer-events: none;
+}
+
+.toast {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border: 1px solid rgb(52 211 153 / 0.45);
+  border-radius: 10px;
+  background: rgb(6 40 30 / 0.96);
+  box-shadow: 0 18px 40px -16px rgb(16 185 129 / 0.6);
+  font-size: 12px;
+  font-weight: 600;
+  color: #d1fae5;
+  opacity: 0;
+}
+
+.toast b {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #10b981;
+  color: #04120b;
+}
+
+@container (width < 34rem) {
+  .side,
+  .pill,
+  .rowAge {
+    display: none;
+  }
+
+  .row {
+    grid-template-columns: 18px minmax(0, 1fr) auto;
+  }
+
+  .main {
+    padding: 14px;
+  }
+}
+
+@container (width < 24rem) {
+  .kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kpi:nth-child(3) {
+    display: none;
+  }
+}
+
+/* ================================================================= cctv */
+
+.cams {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 3px;
+  padding: 3px;
+  background: #05070a;
+}
+
+.feed {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #111111;
+}
+
+.feed svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Scanlines and grain: still textures, no keyframes. */
+.feed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, rgb(255 255 255 / 0.04) 0 1px, transparent 1px 3px);
+  pointer-events: none;
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.14;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.camLabel,
+.rec,
+.stamp {
+  position: absolute;
+  z-index: 2;
+  font: 600 8.5px var(--mono);
+  letter-spacing: 0.06em;
+  color: rgb(255 255 255 / 0.88);
+  text-shadow: 0 1px 2px #000000;
+  white-space: nowrap;
+}
+
+.camLabel {
+  top: 6px;
+  left: 7px;
+}
+
+.rec {
+  top: 6px;
+  right: 7px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #fca5a5;
+}
+
+.rec i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ef4444;
+}
+
+.stamp {
+  bottom: 6px;
+  left: 7px;
+  color: rgb(255 255 255 / 0.72);
+}
+
+@container (width < 24rem) {
+  .rec {
+    display: none;
+  }
+}
+
+/* =============================================================== access */
+
+.access {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  background:
+    radial-gradient(ellipse at 24% 50%, rgb(251 113 133 / 0.13), transparent 60%),
+    var(--color-screen);
+}
+
+.reader {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding-bottom: 22px;
+}
+
+.pad {
+  /* The pad and the print shrink together on narrow screens. */
+  --pad: 136px;
+  --print: 92px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--pad);
+  height: var(--pad);
+  border: 2px solid #2a323c;
+  border-radius: 50%;
+  background: #11161d;
+}
+
+.ring,
+.scanClip {
+  position: absolute;
+  inset: 7px;
+  border-radius: 50%;
+}
+
+.ring {
+  border: 1.5px solid rgb(251 113 133 / 0.35);
+  background: #0c1016;
+}
+
+.scanClip {
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fingerprint {
+  position: relative;
+  display: grid;
+  color: #64748b;
+}
+
+.fingerprint svg {
+  width: var(--print);
+  height: var(--print);
+}
+
+.scan {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 15%;
+  background: linear-gradient(rgb(251 113 133 / 0), rgb(251 113 133 / 0.95), rgb(251 113 133 / 0));
+  opacity: 0;
+}
+
+.badge {
+  position: absolute;
+  bottom: 12px;
+  inset-inline: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: max-content;
+  margin-inline: auto;
+  padding: 5px 11px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  opacity: 0;
+}
+
+.badgeOk {
+  border: 1px solid rgb(34 197 94 / 0.45);
+  background: rgb(34 197 94 / 0.16);
+  color: #86efac;
+}
+
+.badgeNo {
+  border: 1px solid rgb(244 63 94 / 0.45);
+  background: rgb(244 63 94 / 0.16);
+  color: #fda4af;
+}
+
+.log {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 14px 14px 12px 0;
+  overflow: hidden;
+}
+
+.logHead {
+  font: 700 9.5px var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6b7482;
+}
+
+.logRows {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.logRow {
+  display: grid;
+  grid-template-columns: 7px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  width: 100%;
+  height: 28px;
+  padding: 0 9px;
+  border: 1px solid rgb(255 255 255 / 0.05);
+  border-radius: 8px;
+  background: rgb(255 255 255 / 0.035);
+  font-size: 11px;
+  color: #cbd5e1;
+}
+
+.logText {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.logRow small {
+  font: 10px var(--mono);
+  color: #6b7482;
+}
+
+.lampOk,
+.lampNo {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.lampOk {
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+}
+
+.lampNo {
+  background: #f43f5e;
+  box-shadow: 0 0 8px #f43f5e;
+}
+
+/* Narrow: the reader keeps its own size and the log takes the rest. */
+@container (width < 30rem) {
+  .access {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .reader {
+    padding-inline: 14px;
+  }
+}
+
+/* Phone: door names only; the lamp's colour and the reader's badge carry
+   the verdict. */
+@container (width < 24rem) {
+  .logRow small,
+  .verdict {
+    display: none;
+  }
+
+  .logRow {
+    grid-template-columns: 7px minmax(0, 1fr);
+    gap: 6px;
+    padding: 0 7px;
+  }
+
+  .log {
+    padding-right: 10px;
+  }
+
+  .reader {
+    padding-inline: 10px;
+  }
+
+  .pad {
+    --pad: 112px;
+    --print: 76px;
+  }
+}
+
+@container (width < 18rem) {
+  .reader {
+    padding-inline: 8px;
+  }
+
+  .pad {
+    --pad: 96px;
+    --print: 64px;
+  }
+
+  .badge {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+}
+
+/* ============================================================== network */
+
+.net {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgb(34 211 238 / 0.14), transparent 60%),
+    var(--color-screen);
+}
+
+.net svg,
+.wifi svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ================================================================= wifi */
+
+.wifi {
+  background:
+    radial-gradient(ellipse at 50% 50%, rgb(59 130 246 / 0.12), transparent 70%),
+    var(--color-screen);
+}
+
+/* ============================================================== servers */
+
+.servers {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  padding: 14px 18px;
+  background:
+    radial-gradient(ellipse at 18% 60%, rgb(47 208 138 / 0.16), transparent 60%),
+    var(--color-screen);
+}
+
+.rack {
+  width: 112px;
+  height: 188px;
+}
+
+/* A small phone: a smaller rack leaves the readings room for their labels. */
+@container (width < 18rem) {
+  .servers {
+    grid-template-columns: 84px minmax(0, 1fr);
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .rack {
+    width: 84px;
+    height: 141px;
+  }
+}
+
+.metric {
+  display: grid;
+  gap: 5px;
+}
+
+.metric + .metric {
+  margin-top: 11px;
+}
+
+.metricTop {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.metricTop b {
+  font-family: var(--font-space), system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.bar {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 9px;
+  background: rgb(255 255 255 / 0.07);
+}
+
+.bar i {
+  display: block;
+  height: 100%;
+  border-radius: 9px;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  transform-origin: left;
+}
+
+.bar .cool {
+  background: linear-gradient(90deg, #22d3ee, #60a5fa);
+}
+
+.healthy {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  font-size: 10.5px;
+  color: #86efac;
+}
+
+.healthy i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 8px #34d399;
+}
+
+/* ================================================================= iptv */
+
+.iptv {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: 14px;
+  padding: 14px;
+  background:
+    radial-gradient(ellipse at 85% 10%, rgb(217 70 239 / 0.14), transparent 60%),
+    var(--color-screen);
+}
+
+.epg {
+  --chip: 64px;
+  position: relative;
+  display: grid;
+  grid-template-rows: auto repeat(4, minmax(0, 1fr));
+  gap: 7px;
+  min-width: 0;
+}
+
+.epgHead {
+  display: grid;
+  grid-template-columns: var(--chip) minmax(0, 1fr);
+  gap: 6px;
+  font: 700 9px var(--mono);
+  letter-spacing: 0.08em;
+  color: #6b7482;
+}
+
+.epgTimes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.channel {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--chip) minmax(0, 1fr);
+  gap: 6px;
+  min-height: 0;
+}
+
+/* The selection: faded in on the chosen row, out on the last one. */
+.channelOn {
+  position: absolute;
+  inset: -3px;
+  border: 1px solid rgb(217 70 239 / 0.55);
+  border-radius: 10px;
+  background: rgb(217 70 239 / 0.1);
+  box-shadow: 0 0 18px -6px rgb(217 70 239 / 0.6);
+  pointer-events: none;
+}
+
+.chLogo {
+  position: relative;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgb(255 255 255 / 0.07);
+  border-radius: 7px;
+  background: rgb(255 255 255 / 0.05);
+  font: 700 8.5px var(--mono);
+  letter-spacing: 0.04em;
+  color: #e2e8f0;
+  white-space: nowrap;
+}
+
+.programs {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.program {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: 0 6px;
+  border: 1px solid rgb(255 255 255 / 0.05);
+  border-radius: 6px;
+  background: rgb(255 255 255 / 0.03);
+  font-size: 10.5px;
+  color: #94a3b8;
+}
+
+/* A guide cell truncates its title, like any programme guide. */
+.program > span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.programNow {
+  border-color: rgb(240 171 252 / 0.22);
+  background: rgb(217 70 239 / 0.12);
+  color: #f5d0fe;
+}
+
+.nowLine {
+  position: absolute;
+  top: 0;
+  bottom: -2px;
+  left: calc(var(--chip) + 6px + (100% - var(--chip) - 6px) * var(--now));
+  z-index: 2;
+  width: 2px;
+  margin-left: -1px;
+  background: #f0abfc;
+  box-shadow: 0 0 10px #e879f9;
+  pointer-events: none;
+}
+
+.nowLine i {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: #d946ef;
+  font: 700 7.5px var(--mono);
+  font-style: normal;
+  color: #ffffff;
+  translate: -50% 0;
+}
+
+.tv {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
+}
+
+.picture {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 10px;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+/* A soft studio light, and a dark foot for the caption to sit on. */
+.layer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgb(255 255 255 / 0.22), transparent 55%),
+    linear-gradient(transparent 50%, rgb(0 0 0 / 0.55));
+}
+
+.layerIcon {
+  color: rgb(255 255 255 / 0.32);
+}
+
+.onAir {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: rgb(0 0 0 / 0.45);
+  font: 700 8.5px var(--mono);
+  color: #fecaca;
+}
+
+.onAir i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ef4444;
+}
+
+.caption {
+  position: absolute;
+  right: 10px;
+  bottom: 15px;
+  left: 10px;
+  z-index: 1;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.6);
+}
+
+.caption small {
+  display: block;
+  font: 700 8.5px var(--mono);
+  letter-spacing: 0.08em;
+  color: rgb(255 255 255 / 0.75);
+}
+
+.progress {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  left: 10px;
+  z-index: 1;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 0.25);
+}
+
+.progress i {
+  display: block;
+  height: 100%;
+  background: #f0abfc;
+  transform-origin: left;
+}
+
+.thumbs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  flex: none;
+}
+
+.thumb {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.thumb small {
+  overflow: hidden;
+  font-size: 9px;
+  color: #6b7482;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.thumbScreen {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 5px;
+  aspect-ratio: 16 / 9;
+}
+
+/* Narrow: the room screens stack beside the guide; the big picture goes. */
+@container (width < 30rem) {
+  .iptv {
+    grid-template-columns: minmax(0, 1fr) 84px;
+  }
+
+  .picture {
+    display: none;
+  }
+
+  .tv {
+    justify-content: space-between;
+  }
+
+  .thumbs {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+}
+
+/* Phone: the guide alone. */
+@container (width < 22rem) {
+  .iptv {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tv {
+    display: none;
+  }
+
+  .epg {
+    --chip: 54px;
+  }
+}
+
+/* ================================================================== pbx */
+
+.pbx {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 14px;
+  padding: 14px;
+  background:
+    radial-gradient(ellipse at 15% 20%, rgb(132 204 22 / 0.14), transparent 60%),
+    var(--color-screen);
+}
+
+.flow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.incoming {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid rgb(255 255 255 / 0.07);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.04);
+}
+
+.ringIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgb(132 204 22 / 0.16);
+  box-shadow: 0 0 0 4px rgb(132 204 22 / 0.08);
+  color: #bef264;
+}
+
+.number {
+  display: block;
+  font: 700 11.5px var(--mono);
+  color: #f1f5f9;
+  white-space: nowrap;
+}
+
+.sub {
+  display: block;
+  font-size: 10px;
+  color: #6b7482;
+  white-space: nowrap;
+}
+
+.ivr {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ivrLabel {
+  font: 700 9px var(--mono);
+  letter-spacing: 0.1em;
+  color: #6b7482;
+}
+
+/* Colours come from Motion: lit when the caller picks it. */
+.option {
+  padding: 4px 8px;
+  border: 1px solid;
+  border-radius: 7px;
+  font-size: 10.5px;
+  white-space: nowrap;
+}
+
+.option b {
+  margin-right: 4px;
+  font-family: var(--mono);
+  color: #bef264;
+}
+
+.ext {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px dashed rgb(190 242 100 / 0.35);
+  border-radius: 10px;
+  font-size: 11px;
+  color: #e2e8f0;
+  white-space: nowrap;
+}
+
+.extWait {
+  color: #6b7482;
+}
+
+.extStatus {
+  font: 600 10px var(--mono);
+  color: #bef264;
+}
+
+.wave {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 36px;
+  margin-top: auto;
+}
+
+.wave i {
+  flex: 1;
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(#d9f99d, #65a30d);
+}
+
+.calls {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.callsHead {
+  display: flex;
+  justify-content: space-between;
+  font: 700 9.5px var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6b7482;
+}
+
+.callList {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.call {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  width: 100%;
+  height: 30px;
+  padding: 0 9px;
+  border: 1px solid rgb(255 255 255 / 0.05);
+  border-radius: 8px;
+  background: rgb(255 255 255 / 0.035);
+  font-size: 11px;
+  color: #cbd5e1;
+}
+
+.call svg {
+  color: #a3e635;
+}
+
+.callName {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.callTime {
+  font: 600 10.5px var(--mono);
+  color: #d9f99d;
+}
+
+@container (width < 30rem) {
+  .ivrLabel {
+    display: none;
+  }
+
+  .option {
+    padding: 4px 6px;
+  }
+}
+
+/* Phone: the call's route and its voice; the board of calls steps aside. */
+@container (width < 22rem) {
+  .pbx {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .calls {
+    display: none;
+  }
+}
+
+/* ================================================================ cloud */
+
+.cloud {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 20px 14px;
+  background:
+    radial-gradient(ellipse at 80% 0%, rgb(56 189 248 / 0.16), transparent 60%),
+    var(--color-screen);
+}
+
+.pipe {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+}
+
+.pipeLine {
+  position: absolute;
+  top: 16px;
+  right: 28px;
+  left: 28px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 0.1);
+}
+
+.pipeLine i {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #38bdf8, #34d399);
+  transform-origin: left;
+}
+
+.node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  width: 58px;
+  font-size: 10.5px;
+  color: #64748b;
+}
+
+.nodeDone {
+  color: #e2e8f0;
+}
+
+.nodeDot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid rgb(255 255 255 / 0.14);
+  border-radius: 50%;
+  background: #111827;
+}
+
+.nodeRing,
+.nodeFill {
+  position: absolute;
+  inset: -1.5px;
+  border-radius: 50%;
+}
+
+.nodeRing {
+  border: 1.5px solid #7dd3fc;
+  box-shadow: 0 0 0 5px rgb(56 189 248 / 0.18);
+}
+
+.nodeFill {
+  border: 1.5px solid #7dd3fc;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  box-shadow: 0 0 18px rgb(56 189 248 / 0.55);
+}
+
+.nodeTick {
+  position: relative;
+  display: grid;
+  color: #04121b;
+}
+
+.term {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 0;
+  padding: 8px 12px;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.06);
+  border-radius: 10px;
+  background: #070a0e;
+  font: 11px/1.6 var(--mono);
+  color: #94a3b8;
+}
+
+.term > div {
+  flex: none;
+  white-space: nowrap;
+}
+
+.termCmd {
+  color: #e2e8f0;
+}
+
+.termOk {
+  color: #6ee7b7;
+}
+
+.termHl {
+  color: #7dd3fc;
+}
+
+@container (width < 22rem) {
+  .cloud {
+    padding: 16px 14px 12px;
+  }
+
+  .node {
+    width: 46px;
+    font-size: 9.5px;
+  }
+
+  .term {
+    font-size: 10px;
+  }
+}
+
+/* ============================================================== support */
+
+.support {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 118px;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 20px;
+  background:
+    radial-gradient(ellipse at 90% 80%, rgb(249 115 22 / 0.16), transparent 60%),
+    var(--color-screen);
+}
+
+.ticket {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.ticketHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 12px;
+  color: #e2e8f0;
+}
+
+.ticketId {
+  flex: none;
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: rgb(249 115 22 / 0.14);
+  font: 600 10.5px var(--mono);
+  color: #fdba74;
+}
+
+.ticketTitle {
+  overflow: hidden;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.priority {
+  flex: none;
+  margin-left: auto;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.priorityHigh {
+  background: rgb(244 63 94 / 0.14);
+  color: #fda4af;
+}
+
+.priorityMedium {
+  background: rgb(245 158 11 / 0.14);
+  color: #fcd34d;
+}
+
+.steps {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  padding-left: 20px;
+}
+
+.steps::before,
+.stepsFill {
+  position: absolute;
+  top: 6px;
+  left: 5px;
+  width: 2px;
+  height: calc(100% - 12px);
+  border-radius: 2px;
+}
+
+.steps::before {
+  content: "";
+  background: rgb(255 255 255 / 0.08);
+}
+
+.stepsFill {
+  background: linear-gradient(#fb923c, #22c55e);
+  transform-origin: top;
+}
+
+.step {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11.5px;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.step:global(.is-done) {
+  color: #e2e8f0;
+}
+
+/* The unlit marker; the lit one springs in over it. */
+.step::before,
+.stepLit {
+  position: absolute;
+  top: 4px;
+  left: -19px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.step::before {
+  content: "";
+  border: 2px solid rgb(255 255 255 / 0.2);
+  background: var(--color-screen);
+}
+
+.stepLit {
+  border: 2px solid #fdba74;
+  background: #fb923c;
+  box-shadow: 0 0 10px rgb(251 146 60 / 0.6);
+}
+
+.stepLitFinal {
+  border-color: #86efac;
+  background: #22c55e;
+  box-shadow: 0 0 10px rgb(34 197 94 / 0.6);
+}
+
+.step small {
+  font: 10.5px var(--mono);
+  color: #6b7482;
+}
+
+.dial {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.dial svg {
+  width: 112px;
+  height: 112px;
+}
+
+.dialText {
+  position: absolute;
+  text-align: center;
+}
+
+.dialText b {
+  display: block;
+  font-family: var(--font-space), system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.dialText small {
+  font-size: 9.5px;
+  color: #94a3b8;
+}
+
+/* Phone: a smaller dial, and the title may take two lines. */
+@container (width < 24rem) {
+  .support {
+    grid-template-columns: minmax(0, 1fr) 84px;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .dial svg {
+    width: 84px;
+    height: 84px;
+  }
+
+  .dialText b {
+    font-size: 17px;
+  }
+
+  .priority {
+    display: none;
+  }
+
+  .ticketTitle {
+    display: -webkit-box;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
+/* ============================================================= fallback */
+
+.fallback {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--acc) 16%, transparent), transparent 65%),
+    var(--color-screen);
+  color: var(--acc);
+}

@@ -1,0 +1,119 @@
+/*
+ * Why us: four reasons in a two-by-two grid ruled with hairlines, each with
+ * a line icon that draws itself, its number, a title and one sentence.
+ */
+
+.section {
+  position: relative;
+  background: #ffffff;
+  color: var(--color-ink);
+  padding-block: var(--spacing-section);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: clamp(3rem, 6vw, 4.5rem) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-ink);
+}
+
+.point {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding-block: clamp(2rem, 4vw, 3rem);
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+.point:nth-child(odd) {
+  padding-inline-end: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.point:nth-child(even) {
+  padding-inline-start: clamp(1.5rem, 4vw, 3.5rem);
+  border-inline-start: 1px solid var(--color-hairline);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.badge {
+  display: inline-grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-hairline);
+  background: #ffffff;
+  color: var(--color-emerald);
+  transition:
+    background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.badge svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.point:hover .badge {
+  background: var(--color-emerald);
+  color: #ffffff;
+}
+
+.n {
+  font-size: var(--text-fluid-xs);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--color-muted);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-space), system-ui, sans-serif;
+  font-size: clamp(1.35rem, 1rem + 1vw, 1.9rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+
+.text {
+  margin: 0;
+  max-width: 34rem;
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
+  line-height: 1.65;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+
+/* Space Grotesk has no Arabic, and tracking breaks a connected script. */
+html[lang="ar"] .title {
+  font-family: var(--font-arabic), system-ui, sans-serif;
+  letter-spacing: 0;
+  line-height: 1.45;
+}
+
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .point:nth-child(odd),
+  .point:nth-child(even) {
+    padding-inline: 0;
+    border-inline-start: 0;
+  }
+}

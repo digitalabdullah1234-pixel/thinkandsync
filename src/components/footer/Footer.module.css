@@ -1,0 +1,199 @@
+/*
+ * The footer: the old ThinkSync footer made modern. White ground, the
+ * "thinksync" wordmark with its green square, the studio and the email, then
+ * the services sliding by as outlines that fill green under the mouse.
+ */
+.footer {
+  --ink: #16211c;
+  --muted: #5b655f;
+  --line: #e6e4dc;
+  --accent: #0b7c43;
+  --dot: #22c271;
+
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  background: #ffffff;
+  color: var(--ink);
+  border-top: 1px solid var(--line);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem 3rem;
+  padding-top: clamp(3.5rem, 7vw, 6rem);
+}
+
+/* "thinksync" and its square: always Latin, whatever the page language. */
+.word {
+  display: inline-block;
+  white-space: nowrap;
+  font: 600 clamp(3.6rem, 12vw, 9.5rem) / 0.9 var(--font-sans), system-ui, sans-serif;
+  letter-spacing: -0.055em;
+}
+
+.word i {
+  display: inline-block;
+  width: 0.15em;
+  height: 0.15em;
+  margin-inline-start: 0.05em;
+  background: var(--dot);
+}
+
+.studio {
+  display: grid;
+  gap: 0.45rem;
+  align-content: start;
+  justify-items: start;
+}
+
+.label {
+  font: 500 0.72rem / 1.3 ui-monospace, "SF Mono", Consolas, monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.city {
+  min-height: 28px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.mail {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  margin-top: -0.3rem;
+  color: var(--ink);
+  font: 400 1rem / 1.5 var(--font-sans), system-ui, sans-serif;
+  text-decoration: none;
+}
+
+.mail > span {
+  position: relative;
+}
+
+.underline {
+  position: absolute;
+  inset-inline: 0;
+  bottom: -0.08em;
+  height: max(1px, 0.06em);
+  background: var(--accent);
+  transform-origin: left;
+}
+
+.marquee {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-block: 1rem;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  white-space: nowrap;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+/*
+ * A service name, drawn as an outline. The stroke is painted under the fill:
+ * the fill (white, green on hover) hides the inner half of it, and with it the
+ * lines where a letter's own strokes overlap, leaving a clean 1.5px edge.
+ */
+.title {
+  padding-block: 0.08em;
+  font: 600 clamp(3rem, 8.5vw, 7.5rem) / 0.92 var(--font-sans), system-ui, sans-serif;
+  letter-spacing: -0.055em;
+  -webkit-text-stroke: 3px var(--ink);
+  paint-order: stroke fill;
+}
+
+.sq {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 0.9rem;
+  height: 0.9rem;
+  background: var(--dot);
+}
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem 2rem;
+  padding-block: 1.1rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.rights,
+.privacy,
+.top {
+  font: 500 0.68rem / 1.3 ui-monospace, "SF Mono", Consolas, monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Pushed to the far end, just before the back-to-top button, and underlined so it reads as a link. */
+.privacy {
+  margin-inline-start: auto;
+  color: var(--muted);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: color 0.25s;
+}
+
+.privacy:hover {
+  color: var(--accent);
+}
+
+.top {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+}
+
+.footer a:focus-visible,
+.footer button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Arabic: the page's Arabic face, no tracking, and the small labels a size up so they read. */
+:global(html[lang="ar"]) .footer :is(.label, .city, .title, .rights, .privacy, .top) {
+  font-family: var(--font-arabic), system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+/* Arabic letters reach higher and lower than Latin ones: give the outlines room so none are cut. */
+:global(html[lang="ar"]) .footer .title {
+  padding-block: 0;
+  line-height: 1.35;
+}
+
+:global(html[lang="ar"]) .footer :is(.label, .rights, .privacy, .top) {
+  font-size: 0.82rem;
+  text-transform: none;
+}

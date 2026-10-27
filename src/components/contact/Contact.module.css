@@ -1,0 +1,239 @@
+/*
+ * Start a project: the form written as one sentence on a white ground,
+ * the blanks underlined in green, the service's options as chips under it.
+ */
+
+.section {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  background: #ffffff;
+  color: #16211c;
+}
+
+.shell {
+  padding-block: clamp(4.5rem, 10vw, 8rem);
+}
+
+.form {
+  display: grid;
+  gap: 2.2rem;
+  margin-top: 2.6rem;
+}
+
+/* The sentence: display type, the inputs set inside it at the same size. */
+.sentence {
+  margin: 0;
+  font: 500 clamp(1.5rem, 3.4vw, 2.7rem) / 1.55 var(--font-space), system-ui, sans-serif;
+  letter-spacing: -0.02em;
+  color: #16211c;
+}
+
+.blank {
+  max-width: 100%;
+  min-height: 44px;
+  padding: 0 0.15em;
+  border: 0;
+  border-bottom: 2px solid #0b7c43;
+  border-radius: 0;
+  background: transparent;
+  color: #0b7c43;
+  font: inherit;
+  letter-spacing: inherit;
+  vertical-align: baseline;
+  outline: none;
+  transition: border-color 0.25s, background-color 0.25s;
+}
+
+.blank::placeholder {
+  color: currentColor;
+  opacity: 0.42;
+}
+
+.blank:focus-visible {
+  background: rgb(16 152 90 / 0.06);
+}
+
+.name {
+  width: 10ch;
+}
+
+.company {
+  width: 12ch;
+}
+
+.phone {
+  width: 15ch;
+  text-align: start;
+}
+
+.select {
+  max-width: calc(100% - 0.6em);
+  cursor: pointer;
+  color-scheme: light;
+}
+
+/* Small caps label with an aside on the far side. */
+.labelRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.label {
+  font: 600 0.72rem / 1.2 var(--font-sans), system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #5b655f;
+}
+
+.hint {
+  font: 400 0.82rem / 1.2 var(--font-sans), system-ui, sans-serif;
+  color: #5b655f;
+}
+
+.group {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.55rem 0.95rem;
+  border: 1px solid #e6e4dc;
+  border-radius: 999px;
+  background: transparent;
+  color: #16211c;
+  font: 500 0.9rem / 1.25 var(--font-sans), system-ui, sans-serif;
+  cursor: pointer;
+  transition: background-color 0.25s, border-color 0.25s, color 0.25s;
+}
+
+.chip:hover {
+  border-color: rgb(11 124 67 / 0.5);
+}
+
+.chip[aria-pressed="true"] {
+  border-color: #0b7c43;
+  background: #0b7c43;
+  color: #ffffff;
+}
+
+.empty {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border: 1px dashed #e6e4dc;
+  border-radius: 12px;
+  color: #5b655f;
+  font: 400 0.9rem / 1.4 var(--font-sans), system-ui, sans-serif;
+}
+
+.notes {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.7rem 0;
+  border: 0;
+  border-bottom: 1.5px solid #e6e4dc;
+  background: transparent;
+  color: #16211c;
+  font: 400 1rem / 1.4 var(--font-sans), system-ui, sans-serif;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.25s;
+}
+
+.notes::placeholder {
+  color: currentColor;
+  opacity: 0.42;
+}
+
+.notes:focus-visible {
+  border-bottom-color: #0b7c43;
+}
+
+.send {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 52px;
+  padding: 0.9rem 1.8rem;
+  border: 0;
+  border-radius: 999px;
+  background: #0b7c43;
+  color: #ffffff;
+  font: 600 1rem / 1 var(--font-sans), system-ui, sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 14px 30px -14px rgb(11 124 67 / 0.6);
+}
+
+.send:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* The note under the button: small, with the policy link underlined in green. */
+.consent {
+  margin: 0;
+  max-width: 34rem;
+  font: 400 0.82rem / 1.5 var(--font-sans), system-ui, sans-serif;
+  color: #5b655f;
+}
+
+.consent a {
+  color: #16211c;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: #0b7c43;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  transition: color 0.25s;
+}
+
+.consent a:hover {
+  color: #0b7c43;
+}
+
+.consent a:focus-visible {
+  outline: 2px solid #0b7c43;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.status {
+  margin: 0;
+  font: 500 0.92rem / 1.4 var(--font-sans), system-ui, sans-serif;
+}
+
+.chip:focus-visible,
+.send:focus-visible,
+.blank:focus-visible,
+.notes:focus-visible {
+  outline: 2px solid #0b7c43;
+  outline-offset: 3px;
+}
+
+/* Space Grotesk has no Arabic, and negative tracking breaks a connected script. */
+html[lang="ar"] .sentence,
+html[lang="ar"] .chip,
+html[lang="ar"] .label,
+html[lang="ar"] .hint,
+html[lang="ar"] .notes,
+html[lang="ar"] .send,
+html[lang="ar"] .consent,
+html[lang="ar"] .empty {
+  font-family: var(--font-arabic), system-ui, sans-serif;
+  letter-spacing: 0;
+}

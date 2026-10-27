@@ -1,0 +1,173 @@
+/*
+ * The services coverflow, on the hero's night.
+ *
+ * The ground is the hero's sky (near-black green deepening to a dark forest
+ * green at the foot), with the same soft mint light pooled behind the cards,
+ * so the section reads as part of the hero's world rather than a flat fill.
+ * Every animation is Framer Motion's; nothing here transitions.
+ */
+
+.section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-block: var(--spacing-section);
+  color: #ffffff;
+  background:
+    radial-gradient(62% 44% at 50% 60%, rgb(47 208 138 / 0.15), transparent 72%),
+    linear-gradient(180deg, #030b0a 0%, #05130f 42%, #0a2a22 100%);
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* A floor for the reflections: the lower part of the section settles darker. */
+.backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgb(1 8 5 / 0.35));
+}
+
+.body {
+  margin-top: clamp(2rem, 3.6vw, 3rem);
+}
+
+.stage {
+  --w: clamp(17rem, 36vw, 32rem);
+  position: relative;
+  /* The front card, plus the top of its reflection; the words sit right under. */
+  height: calc(var(--w) * 0.625 + clamp(2.6rem, 4.4vw, 4rem));
+  perspective: 1200px;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.card {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--w);
+  margin-left: calc(var(--w) / -2);
+  padding: 0;
+  border: 0;
+  background: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card[aria-selected="true"] {
+  cursor: default;
+}
+
+.frame {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--color-screen);
+  box-shadow:
+    0 24px 44px -20px rgb(2 22 11 / 0.75),
+    0 0 0 1px rgb(255 255 255 / 0.1);
+}
+
+.photo {
+  object-fit: cover;
+  /* A drag across the row must reach the row's pan, not start a native image drag. */
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+/* Darkens the cards that stand away from the middle. */
+.dim {
+  position: absolute;
+  inset: 0;
+  background: #020a07;
+  pointer-events: none;
+}
+
+/* The card mirrored on the floor, strongest at the card's foot and gone by
+   two fifths of its height. Flipped, so the mask runs from its own bottom. */
+.reflection {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 12px;
+  transform: scaleY(-1);
+  -webkit-mask-image: linear-gradient(to top, rgb(0 0 0 / 0.3), transparent 42%);
+  mask-image: linear-gradient(to top, rgb(0 0 0 / 0.3), transparent 42%);
+  pointer-events: none;
+}
+
+.card:focus-visible {
+  outline: none;
+}
+
+.card:focus-visible .frame {
+  outline: 2px solid #ffffff;
+  outline-offset: 4px;
+}
+
+.words {
+  position: relative;
+  max-width: 52rem;
+  min-height: 11.5rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.4rem);
+  line-height: 1.15;
+  font-weight: 600;
+  font-variation-settings: "wdth" 88;
+  letter-spacing: -0.02em;
+}
+
+html[lang="ar"] .title {
+  font-family: var(--font-arabic);
+  font-variation-settings: normal;
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+
+.line {
+  margin-top: 0.65rem;
+  color: rgb(255 255 255 / 0.84);
+  font-size: clamp(1.0625rem, 0.97rem + 0.4vw, 1.3rem);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.points {
+  margin-top: 1.1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  list-style: none;
+  padding: 0;
+}
+
+.points li {
+  padding: 0.4rem 0.95rem;
+  border-radius: calc(infinity * 1px);
+  background: rgb(255 255 255 / 0.06);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12);
+  font-size: var(--text-fluid-sm);
+  font-weight: 600;
+}
+
+html[lang="ar"] .points li {
+  font-size: var(--text-fluid-base);
+}

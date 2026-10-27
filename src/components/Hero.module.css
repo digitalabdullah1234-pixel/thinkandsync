@@ -1,0 +1,347 @@
+/*
+ * The hero: Riyadh at night under a dark-green sky, the copy centred above it,
+ * and light fibres joining the city to the accent word.
+ *
+ * Layers, bottom to top: the sky (this box's background), stars and haze, the
+ * far city, the fibres (two canvases), the near city (landmarks in front of
+ * the fibres, so each fibre comes out of its tower), then the copy.
+ *
+ * Two compositions of the city: wide (landscape screens) and tall (portrait:
+ * phones, tablets, near-square windows). The stylesheet picks one, so the
+ * right city is there from the first paint; the fibres read which is showing.
+ */
+
+.hero {
+  /* The headline's size, shared with the subheading's spacing below. */
+  --hl: clamp(2.6rem, 1.5rem + 4.6vw, 5.5rem);
+  /* The city's box. Tall enough that a tower is never cropped at the top
+     (the PIF Tower is 23% of the wide city's width). */
+  --city-h: max(min(52svh, 29.375rem), 24vw);
+  /* Room kept clear under the copy: the tallest blocks under the text (190 of
+     the city's 500 units), at whichever scale the city is drawn. */
+  --keep: max(13.2vw, calc(var(--city-h) * 0.38));
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: max(100vh, 36rem);
+  /* `svh` so mobile browser chrome collapsing cannot crop anything. */
+  min-height: max(100svh, 36rem);
+  padding-block: clamp(7.5rem, 17vh, 11rem) calc(var(--keep) + 2.5rem);
+  overflow: hidden;
+  isolation: isolate;
+  color: #ffffff;
+  background: linear-gradient(180deg, #030b0a 0%, #05130f 38%, #0a2a22 66%, #1a3a2c 78%, #2a3a24 86%);
+}
+
+/* A short landscape screen (a phone on its side): a little more height, so
+   the subheading clears Kingdom Centre. */
+@media (max-height: 31.25rem) and (min-aspect-ratio: 5/4) {
+  .hero {
+    min-height: 40rem;
+  }
+}
+
+/* ---------------------------------------------------------------- sky */
+
+.stars {
+  position: absolute;
+  inset: 0 0 40% 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.starGroup {
+  position: absolute;
+  inset: 0;
+  animation: twinkle 3.6s ease-in-out infinite alternate;
+}
+
+.starGroup[data-group="1"] {
+  animation-duration: 5.2s;
+}
+
+.hero:not([data-live]) .starGroup {
+  animation-play-state: paused;
+}
+
+@keyframes twinkle {
+  to {
+    opacity: 0.3;
+  }
+}
+
+.haze {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 7.5rem;
+  height: 16.25rem;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(70% 50% at 50% 60%, rgba(47, 208, 138, 0.18), transparent 70%);
+}
+
+/* --------------------------------------------------------------- city */
+
+.city {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: var(--city-h);
+  pointer-events: none;
+}
+
+.cityFar {
+  z-index: 1;
+}
+
+.cityNear {
+  z-index: 3;
+}
+
+.city svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.city .tall {
+  display: none;
+}
+
+/* The fibres: between the far and the near city. The layer fades out with the
+   copy as the hero scrolls away. */
+.fxLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* The software sky (editor, browser and phone): above the fibres and the far
+   city, under the copy, fading with it as the hero scrolls away. */
+.softLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.fx {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/*
+ * Portrait screens. The tall city is drawn to its height, so on a phone its
+ * middle 640 units (Al Faisaliah to the PIF Tower) fill the width; wider
+ * screens show more of the city either side. The copy sits centred in the
+ * sky above the towers, and the subheading leaves a lane either side for the
+ * fibres to climb in.
+ */
+@media (max-aspect-ratio: 5/4) {
+  .hero {
+    --city-h: max(36svh, 36vw);
+    /* The tallest tower (330 of 500 units), at whichever scale it is drawn. */
+    --keep: max(33vw, calc(var(--city-h) * 0.66));
+    justify-content: center;
+    padding-block: 5.5rem calc(var(--keep) + 2rem);
+  }
+
+  .city .wide {
+    display: none;
+  }
+
+  .city .tall {
+    display: block;
+  }
+}
+
+/* ------------------------------------------------------------------- copy */
+
+/*
+ * Children stretch, and each block centres itself with `margin-inline: auto`.
+ *
+ * `align-items: center` looks like the obvious choice here and is a trap: each
+ * child is wrapped in a Reveal, so the flex item is the wrapper, not the text.
+ * A wrapper sized shrink-to-fit takes the full available width whenever its
+ * content's max-content is wider — which for a sentence it always is — and the
+ * capped block inside it then sits against the wrapper's start edge. That is
+ * what put the subheading hard left of the headline.
+ */
+.inner {
+  position: relative;
+  /* Above the city and the fibres, so the copy always reads. */
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: center;
+}
+
+/* Sentence case: at 42 characters this is a line, not a label, and a long
+   run of capitals reads slower. One size up, since caps no longer carry it. */
+.eyebrow {
+  font-size: var(--text-fluid-sm);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: #2fd08a;
+}
+
+/* Arabic has no uppercase, and the tracking only hurts it. */
+html[lang="ar"] .eyebrow {
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: var(--text-fluid-sm);
+}
+
+.headline {
+  margin-top: clamp(1rem, 2vh, 1.6rem);
+  margin-inline: auto;
+  max-width: 18ch;
+  /* Space Grotesk: a technical grotesque with squared-off terminals and a
+     tall x-height. It carries the headline at hero sizes without reading as
+     the default UI sans that `--font-sans` is. */
+  font-family: var(--font-space), system-ui, sans-serif;
+  font-size: var(--hl);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+  /* Keeps the break before the accent word (see Hero.tsx), so it always has
+     a line of its own; ordinary spaces still wrap and collapse. */
+  white-space: pre-line;
+  color: #ffffff;
+}
+
+/* Space Grotesk has no Arabic coverage, and its tight negative tracking is
+   actively wrong for a connected script. */
+/* The accent word has a line of its own, so this only sets how wide the
+   phrase above it may run: wide enough to keep it on one line, as the
+   English. */
+html[lang="ar"] .headline {
+  font-family: var(--font-arabic), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.2;
+  max-width: 16ch;
+}
+
+.accent {
+  position: relative;
+  display: inline-block;
+  color: #2fd08a;
+}
+
+/* The line under the accent word. The fibres draw it (they run through it,
+   on the canvas); the element marks where it is and carries its glow when
+   light arrives. */
+.underline {
+  position: absolute;
+  inset-inline: 0.02em;
+  bottom: -0.13em;
+  height: max(3px, 0.06em);
+  border-radius: calc(infinity * 1px); /* = Tailwind rounded-full, one value site-wide */
+  transition: box-shadow 450ms ease-out;
+}
+
+.underline[data-glow="hit"] {
+  box-shadow: 0 0 22px 2px rgba(47, 208, 138, 0.6);
+}
+
+.underline[data-glow="flare"] {
+  box-shadow:
+    0 0 40px 6px rgba(47, 208, 138, 0.75),
+    0 0 110px 18px rgba(220, 255, 240, 0.2);
+}
+
+.sub {
+  /* A fixed 2rem from the line under the accent word to the subheading, at
+     every size and in both languages: the line sits 0.1em of the headline
+     below its last line, so that is added back. The light where the fibres
+     meet the line stays inside this gap. */
+  margin-top: calc(2rem + var(--hl) * 0.1);
+  margin-inline: auto;
+  /* The brief's ~560px, expressed so it also shrinks on a narrow screen. */
+  max-width: min(35rem, 100%);
+  font-size: var(--text-fluid-lg);
+  color: rgba(255, 255, 255, 0.76);
+  text-wrap: pretty;
+  /* A dark halo, so the city and the light behind never cost contrast. */
+  text-shadow:
+    0 0 14px #040a08,
+    0 0 28px #040a08;
+}
+
+/* Portrait: a lane either side of the subheading for the fibres to climb in,
+   and more room above it for them to turn into the line. (After the rule
+   above, so it wins.) */
+@media (max-aspect-ratio: 5/4) {
+  .sub {
+    max-width: min(35rem, 100% - 2.75rem);
+  }
+}
+
+/* ------------------------------------------------------------ scroll cue */
+
+.cue {
+  position: absolute;
+  bottom: clamp(0.75rem, 2.5vh, 1.5rem);
+  left: 50%;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-left: -1.375rem;
+  border-radius: calc(infinity * 1px); /* = Tailwind rounded-full, one value site-wide */
+}
+
+.cue:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
+.cueFrame {
+  display: flex;
+  justify-content: center;
+  width: 1.4rem;
+  height: 2.2rem;
+  padding-top: 0.4rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  border-radius: calc(infinity * 1px); /* = Tailwind rounded-full, one value site-wide */
+  transition: border-color 200ms ease-out;
+}
+
+.cue:hover .cueFrame {
+  border-color: #ffffff;
+}
+
+.cueDot {
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: calc(infinity * 1px); /* = Tailwind rounded-full, one value site-wide */
+  background: #2fd08a;
+}
+
+/* On a short screen the cue would crowd the copy; the content is the cue. */
+@media (max-height: 40rem) {
+  .cue {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------ brand band */
+
+/* Under the hero, not in it: it rises in once it scrolls into view. Clipped,
+   as the hero used to clip it: its logo rows are laid out twice for the
+   loop, and must never widen the page. */
+.bandSlot {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  overflow: clip;
+}

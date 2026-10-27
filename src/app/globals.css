@@ -1,0 +1,246 @@
+@import "tailwindcss";
+
+@theme {
+  /* Light theme, matched to the logo's green. */
+  --color-bg: #fafaf8;
+  --color-surface: #ffffff;
+  --color-surface-2: #f3f2ec;
+  --color-ink: #16211c;
+  --color-muted: #5b655f;
+  --color-hairline: #e6e4dc;
+
+  /* Decorative accent green (dots, dividers, borders, icon plates, tints).
+     Never used behind white text or as text itself. */
+  --color-emerald: #10985a;
+  /* Green TEXT on white, and solid button fills under white text.
+     #0e8f4e only reaches 4.15:1 on white and 3.71:1 under white button text,
+     both under the 4.5:1 AA floor for small text, so this is a shade deeper:
+     5.28:1 as text on white, 4.77:1 on the tinted card headers. */
+  --color-mint: #0b7c43;
+  --color-teal: #0b7c43;
+
+  /* Dark footer band. */
+  --color-night: #0e1613;
+  --color-night-ink: #edebe3;
+  --color-night-muted: #b7bfba;
+  --color-night-hairline: #24302a;
+  --color-night-mint: #2fd08a;
+
+  /* The hero's ground, shared by every dark section so the cuts between them
+     read as one continuous night. */
+  --color-abyss: #06120d;
+
+  /* ---------------------------------------------------------------------
+     Fluid type scale.
+
+     Every step interpolates between a 375px phone and a 1440px desktop, so
+     nothing is fixed-large on a 13" laptop and nothing is cramped on a
+     phone. Body never drops below 16px, which is the mobile readability
+     floor. Above 1440px the scale stops growing — the shell widens instead.
+     --------------------------------------------------------------------- */
+  --text-fluid-xs: clamp(0.75rem, 0.73rem + 0.09vw, 0.8125rem);
+  --text-fluid-xs--line-height: 1.5;
+  --text-fluid-sm: clamp(0.875rem, 0.85rem + 0.09vw, 0.9375rem);
+  --text-fluid-sm--line-height: 1.55;
+  --text-fluid-base: clamp(1rem, 0.98rem + 0.09vw, 1.0625rem);
+  --text-fluid-base--line-height: 1.6;
+  --text-fluid-lg: clamp(1.0625rem, 1.02rem + 0.19vw, 1.1875rem);
+  --text-fluid-lg--line-height: 1.65;
+  --text-fluid-xl: clamp(1.125rem, 1.04rem + 0.38vw, 1.375rem);
+  --text-fluid-xl--line-height: 1.5;
+  --text-fluid-h3: clamp(1.25rem, 1.12rem + 0.56vw, 1.625rem);
+  --text-fluid-h3--line-height: 1.3;
+  --text-fluid-h2: clamp(1.875rem, 1.48rem + 1.69vw, 3rem);
+  --text-fluid-h2--line-height: 1.15;
+  --text-fluid-h1: clamp(2.25rem, 1.72rem + 2.25vw, 3.75rem);
+  --text-fluid-h1--line-height: 1.08;
+  /* Section headlines: the hero's scale, one step down. */
+  --text-fluid-display: clamp(2.5rem, 1.6rem + 3.8vw, 4.75rem);
+  --text-fluid-display--line-height: 1.02;
+
+  /* Fluid spacing steps, used for section rhythm and the shell gutter.
+     (`--spacing-block` lives on :root below, not here: see the note there.) */
+  --spacing-gutter: clamp(1.25rem, 3.4vw, 3.25rem);
+  --spacing-section: clamp(3.5rem, 6.2vw, 7rem);
+
+  /* One accent per service. Spread evenly round the wheel, so no two cards
+     that sit next to each other read alike. The brand green stays primary. */
+  --color-acc-software: #8b5cf6;
+  --color-acc-cloud: #0ea5e9;
+  --color-acc-network: #06b6d4;
+  --color-acc-wifi: #3b82f6;
+  --color-acc-servers: #10b981;
+  --color-acc-cctv: #f59e0b;
+  --color-acc-access: #f43f5e;
+  --color-acc-support: #f97316;
+  --color-acc-iptv: #d946ef;
+  --color-acc-pbx: #84cc16;
+
+  /* The dark "screens" inside cards, and the paper ground of the light
+     sections and the brand band. */
+  --color-screen: #0b1016;
+  --color-paper: #f4f5f0;
+}
+
+@theme inline {
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-bricolage);
+  --font-arabic: var(--font-plex-arabic);
+}
+
+:root {
+  /* Wide screens get a wider shell instead of ever-growing empty margins;
+     narrow ones just use the viewport minus the fluid gutter. */
+  --shell-max: min(94vw, 96rem);
+  /*
+   * A plain variable, deliberately outside @theme. As a theme spacing key
+   * named `block`, Tailwind 4 also generated `.inline-block { inline-size:
+   * var(--spacing-block) }` (the `inline-*` size utility), which overrode the
+   * display utility of the same name and squeezed every `inline-block`
+   * element to ~56px: the footer links broke one word per line. The header's
+   * CSS module and the footer read it as `var(--spacing-block)`.
+   */
+  --spacing-block: clamp(1.75rem, 3.4vw, 3.5rem);
+  /* The hero's fallback ground — also what the intro overlay dissolves from,
+     so a missing or slow video never shows a seam between the two. */
+  --color-hero-ground: #0b0f0d;
+}
+
+html {
+  /* The page ground lives on the root, not on <body>: the dot grid is a fixed
+     layer at z-index -10 inside <body>, and a background on <body> itself
+     would paint straight over it. */
+  background: var(--color-bg);
+  scroll-behavior: smooth;
+  /* Reserve the scrollbar gutter so locking scroll during the intro
+     overlay doesn't shift the layout when it is released. */
+  scrollbar-gutter: stable;
+}
+
+body {
+  background: transparent;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-fluid-base);
+  line-height: var(--text-fluid-base--line-height);
+}
+
+/* The one page container. Centred, fluid, and capped so text never runs
+   the full width of a large monitor. */
+.shell {
+  width: 100%;
+  max-width: var(--shell-max);
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+
+/* Reading measure for body copy — 65ch keeps lines scannable. */
+.measure {
+  max-width: 65ch;
+}
+
+section[id] {
+  scroll-margin-top: clamp(4rem, 5vw, 5.5rem);
+}
+
+/* Native pointer feedback, for everyone the custom cursor stands down for. */
+:where(a, button, [role="button"], summary, label) {
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--color-emerald);
+  color: #ffffff;
+}
+
+html[lang="ar"] body {
+  font-family: var(--font-arabic);
+}
+
+html[lang="ar"] .font-display {
+  font-family: var(--font-arabic);
+  font-weight: 600;
+}
+
+/*
+ * Headline cut: narrow the width axis and lean on the weight so the grotesque
+ * shows its character instead of reading as a neutral sans. Optical sizing is
+ * left on auto — the font moves its own opsz axis with the rendered size.
+ */
+.display-cut {
+  font-variation-settings: "wdth" 88;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+
+html[lang="ar"] .display-cut {
+  font-variation-settings: normal;
+  letter-spacing: 0;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------------ cursor */
+
+/*
+ * The system cursor is never hidden. A custom cursor has to redraw the pointer
+ * itself, and any error between the drawn position and the real one makes
+ * every click land somewhere the user did not aim — which is exactly what
+ * happened here once. The pointer bloom in CustomCursor decorates the native
+ * cursor instead of replacing it, and takes no pointer events.
+ */
+
+/* Reduced motion, only while the site honours it (src/lib/motion-preference.ts
+   marks <html data-motion="reduce"> for visitors who asked). */
+
+/* The intro overlay is server-rendered so there's no flash before
+   hydration; this removes it instantly for anyone who opted out. */
+:root[data-motion="reduce"] [data-preloader] {
+  display: none !important;
+}
+
+/* Scroll reveals, the page transition and the navbar's load-in are all
+   server-rendered at opacity 0 and only lifted once React hydrates. For
+   reduced motion there is no animation to wait for, so show the content
+   from the very first paint. */
+:root[data-motion="reduce"] [data-reveal],
+:root[data-motion="reduce"] [data-page],
+:root[data-motion="reduce"] [data-nav-in] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* A refresh or a step back plays no intro (see BOOT_SCRIPT in the layout). */
+:root[data-intro="skip"] [data-preloader] {
+  display: none !important;
+}
+
+/* Held hidden for the moment the saved Arabic takes to load, so English never flashes first. */
+:root[data-lang-boot] body {
+  visibility: hidden;
+}
+
+/* The header logo is normally held back until the intro logo lands on it. */
+:root[data-motion="reduce"] [data-header-logo] {
+  opacity: 1 !important;
+}
+
+/*
+ * Film grain, shared by the hero's aurora and every dark section. Texture,
+ * not information — and a fixed dither pattern is a common trigger for visual
+ * sensitivity, so it is quieter under reduced motion.
+ */
+.grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+:root[data-motion="reduce"] .grain {
+  opacity: 0.03;
+}

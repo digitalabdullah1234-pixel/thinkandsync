@@ -1,0 +1,119 @@
+/*
+ * Section headlines, set like the hero's: Space Grotesk, tight tracking, one
+ * green accent word with a drawn rule. `tone` only swaps colours.
+ */
+
+.eyebrow {
+  font-size: var(--text-fluid-xs);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+html[lang="ar"] .eyebrow {
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: var(--text-fluid-sm);
+}
+
+.title {
+  margin-top: 1rem;
+  font-family: var(--font-space), system-ui, sans-serif;
+  font-size: var(--text-fluid-display);
+  line-height: var(--text-fluid-display--line-height);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+/* Space Grotesk has no Arabic, and negative tracking breaks a connected script. */
+html[lang="ar"] .title {
+  font-family: var(--font-arabic), system-ui, sans-serif;
+  letter-spacing: 0;
+  line-height: 1.2;
+}
+
+.intro {
+  margin-top: 1.25rem;
+  max-width: 36rem;
+  font-size: var(--text-fluid-lg);
+  text-wrap: pretty;
+}
+
+.accent {
+  position: relative;
+  display: inline-block;
+}
+
+/* Matches the hero's rule: under the descenders, thin enough to read as a line. */
+.underline {
+  position: absolute;
+  inset-inline: 0.02em;
+  bottom: -0.13em;
+  height: max(3px, 0.06em);
+  border-radius: calc(infinity * 1px); /* = Tailwind rounded-full, one value site-wide */
+  background: linear-gradient(90deg, var(--color-emerald), var(--color-night-mint) 55%, #7ff0bf);
+}
+
+[dir="rtl"] .underline {
+  background: linear-gradient(270deg, var(--color-emerald), var(--color-night-mint) 55%, #7ff0bf);
+}
+
+/* ------------------------------------------------------------------ tones */
+
+.dark .eyebrow,
+.dark .accent {
+  color: var(--color-night-mint);
+}
+
+.dark .title {
+  color: #ffffff;
+}
+
+.dark .intro {
+  color: rgb(255 255 255 / 0.76);
+}
+
+.dark .underline {
+  box-shadow: 0 0 18px rgb(47 208 138 / 0.45);
+}
+
+.light .eyebrow,
+.light .accent {
+  color: var(--color-mint);
+}
+
+.light .title {
+  color: var(--color-ink);
+}
+
+.light .intro {
+  color: var(--color-muted);
+}
+
+/* On the brand green (services): white type, the accent in a pale mint that
+   keeps 4.8:1 on the green, and a light rule so it still reads against it. */
+.green .eyebrow {
+  color: rgb(255 255 255 / 0.82);
+}
+
+.green .title {
+  color: #ffffff;
+}
+
+.green .accent {
+  color: #9af5cb;
+}
+
+.green .intro {
+  color: rgb(255 255 255 / 0.84);
+}
+
+.green .underline {
+  background: linear-gradient(90deg, #9af5cb, #ffffff);
+  box-shadow: 0 0 16px rgb(154 245 203 / 0.45);
+}
+
+[dir="rtl"] .green .underline {
+  background: linear-gradient(270deg, #9af5cb, #ffffff);
+}

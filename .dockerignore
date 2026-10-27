@@ -1,0 +1,13 @@
+# Kept out of the Docker build: installed and built files (rebuilt inside),
+# local data and secrets (the server has its own), and the AI tools' folders.
+node_modules
+.next
+.git
+data
+.env*
+!.env.example
+.agents
+.claude
+.freebuff
+*.tsbuildinfo
+npm-debug.log*

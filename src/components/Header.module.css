@@ -1,0 +1,568 @@
+/*
+ * The HUD bar.
+ *
+ * Both the bar's own outline and the quote button are drawn the same way: two
+ * stacked layers sharing one clip-path, the back one in the border colour and
+ * the front one inset by a pixel in the fill colour. The pixel of back layer
+ * left showing *is* the border — which is the only way to get a hairline that
+ * follows an angled cut, since `border` can't.
+ */
+
+/*
+ * Fixed, not sticky. Sticky leaves the header occupying layout space, so the
+ * hero began *below* it and the strip behind a transparent navbar was the
+ * light page background rather than the film — a white band across the top of
+ * a dark hero. Taking the header out of flow lets the hero start at y=0 and
+ * run underneath it; the hero's own top padding keeps the copy clear.
+ */
+.bar {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 50;
+}
+
+/*
+ * The bar row proper — logo, nav, actions — and the anchor the notched
+ * surface is drawn against.
+ *
+ * The mobile panel used to live in this same flow, which meant opening the
+ * menu grew the header and dragged the notch down to the bottom of the
+ * expanded block. The HUD silhouette belongs to the *bar*, so the panel now
+ * hangs below this row instead of stretching it, and the notch stays put in
+ * both states.
+ */
+.row {
+  position: relative;
+
+  /* The silhouette's measurements live here, not on .surface, so both the
+     surface and the edge light over the hero read the same numbers. */
+  --cut: 14px;
+  --notch-half: 128px;
+  --notch-depth: 11px;
+}
+
+/*
+ * Two treatments. Over the hero film the bar is transparent with white type;
+ * past it the notched light surface fades in and the type goes dark. Only
+ * colours transition, so the flip costs nothing but a compositor pass.
+ */
+.overHero .link,
+.overHero .lang,
+.overHero .quote,
+.overHero .burger {
+  color: #ffffff;
+}
+
+.overHero .link {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.overHero .link:hover {
+  color: #ffffff;
+}
+
+.overHero .link::after {
+  background: #ffffff;
+}
+
+/* The language toggle over the hero: the quote button's glass and hairline
+   (see below). The current language's green chip stays the same in both
+   states. */
+.overHero .lang {
+  background: rgba(255, 255, 255, 0.62);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.overHero .lang::before {
+  background: rgba(6, 18, 13, 0.5);
+}
+
+.overHero .lang:hover {
+  background: #34d98a;
+  color: #ffffff;
+}
+
+.overHero .lang:hover::before {
+  background: rgba(16, 152, 90, 0.4);
+}
+
+/*
+ * Over the aurora the CTA is glass, not a panel.
+ *
+ * The bevelled hairline is drawn by two stacked layers sharing one clip-path
+ * (see the note at the top of this file) — which means the inner layer has to
+ * be opaque enough to hide the outer one, or the whole button turns into the
+ * outer layer's colour. A fully transparent fill therefore is not available
+ * here: it renders as a solid white slab.
+ *
+ * So the fill is a dark glass instead. The aurora reads straight through it,
+ * it adds no grey wash of its own, and it keeps the white label legible
+ * wherever the gradient happens to be brightest.
+ */
+.overHero .quote {
+  /* The border layer — the pixel of it left showing around the fill is the
+     hairline. */
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.overHero .quote::before {
+  background: rgba(6, 18, 13, 0.5);
+  /* No backdrop blur: over an animating canvas that is a full re-sample of
+     everything behind the button on every frame, for an effect the dark glass
+     already gives for free. */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.overHero .quote:hover {
+  background: #34d98a;
+  color: #ffffff;
+}
+
+.overHero .quote:hover::before {
+  background: rgba(16, 152, 90, 0.4);
+}
+
+.overHero .burger {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* --------------------------------------------------------------- bar edge */
+
+.surface {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  /* Bevelled bottom corners plus one notch centred under the nav
+     (measurements on .row). */
+  --hud: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    calc(50% + var(--notch-half) + var(--notch-depth)) 100%,
+    calc(50% + var(--notch-half)) calc(100% - var(--notch-depth)),
+    calc(50% - var(--notch-half)) calc(100% - var(--notch-depth)),
+    calc(50% - var(--notch-half) - var(--notch-depth)) 100%,
+    var(--cut) 100%,
+    0 calc(100% - var(--cut))
+  );
+}
+
+/*
+ * The surface is painted in BOTH states now, and only its two colours change.
+ *
+ * It used to fade its whole self in on scroll, which meant the bar over the
+ * hero had no silhouette at all — no bevels, no notch, just floating white
+ * text. Keeping one surface and transitioning `background-color` on its two
+ * layers gets the identical HUD outline in both states, and it keeps a single
+ * backdrop-filter layer on the page: two cross-fading blurred layers would
+ * have doubled the most expensive compositor work in the header, every frame,
+ * forever, to save one 350ms repaint of a 64px-tall bar.
+ */
+
+/* Hairline: the full silhouette, in the border colour. */
+.surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-hairline);
+  clip-path: var(--hud);
+  transition: background-color 350ms ease-out;
+}
+
+/* Fill: the same silhouette one pixel shorter, so the layer behind survives
+   as a hairline along every edge — bevels and notch included. */
+.surface::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 1px;
+  background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  clip-path: var(--hud);
+  transition: background-color 350ms ease-out;
+}
+
+/*
+ * Over the hero: nothing at all.
+ *
+ * Both layers go fully transparent and the backdrop blur is switched off
+ * outright rather than set to 0 — a `blur(0px)` still allocates a backdrop
+ * layer and makes the compositor re-sample everything behind the bar on every
+ * frame of the aurora, which is the most expensive thing this header could
+ * possibly do for a filter that produces no visible effect. `none` removes the
+ * layer entirely.
+ *
+ * The bar's silhouette, its hairline and its frosted fill all belong to the
+ * scrolled state now. Over the aurora there is only type.
+ */
+.overHero .surface::before {
+  background: transparent;
+}
+
+.overHero .surface::after {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* A phone is nowhere near wide enough for a 256px notch. */
+@media (max-width: 63.99em) {
+  .row {
+    --cut: 10px;
+    --notch-half: 42px;
+    --notch-depth: 8px;
+  }
+}
+
+/* ------------------------------------------------------------------- rows */
+
+.inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: clamp(1rem, 2vw, 2rem);
+  min-height: clamp(3.75rem, 4.6vw, 4.75rem);
+}
+
+/* Hugs the wordmark instead of filling its 1fr track — the intro flight
+   measures this element to find where to land, so a stretched box would make
+   the logo settle in the wrong place at the wrong size. */
+.brand {
+  justify-self: start;
+  display: inline-flex;
+}
+
+.nav {
+  display: none;
+  align-items: center;
+  gap: clamp(1.25rem, 2.6vw, 2.5rem);
+  justify-self: center;
+}
+
+.actions {
+  display: none;
+  align-items: center;
+  gap: clamp(0.75rem, 1.4vw, 1.25rem);
+  justify-self: end;
+}
+
+@media (min-width: 64rem) {
+  .nav,
+  .actions {
+    display: flex;
+  }
+}
+
+.link {
+  position: relative;
+  font-size: var(--text-fluid-sm);
+  color: var(--color-muted);
+  white-space: nowrap;
+  transition: color 200ms ease-out;
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -0.4em;
+  height: 1px;
+  background: var(--color-emerald);
+  transform: scaleX(0);
+  transform-origin: var(--origin, left) center;
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.link:hover {
+  color: var(--color-mint);
+}
+
+.link:hover::after {
+  transform: scaleX(1);
+}
+
+/* ------------------------------------------------------------ lang toggle */
+
+/*
+ * Drawn like the quote button beside it, so the two read as a pair: the same
+ * bevel (the top-end and bottom-start corners cut), the same hairline made of
+ * two stacked layers, the same type, and the same height (it stretches to the
+ * row, whose height the button sets). The current language sits in a small
+ * green chip cut the same way; the other is muted. Kept a size smaller than
+ * the button (the owner asked for it smaller), centred on the row.
+ */
+.lang {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  gap: 2px;
+  padding: 4px 5px;
+  font-size: var(--text-fluid-xs);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--color-muted);
+
+  --b: 8px;
+  --bevel: polygon(
+    0 0,
+    calc(100% - var(--b)) 0,
+    100% var(--b),
+    100% 100%,
+    var(--b) 100%,
+    0 calc(100% - var(--b))
+  );
+  clip-path: var(--bevel);
+  /* The border layer, as the quote button's. */
+  background: color-mix(in srgb, var(--color-ink) 30%, transparent);
+  transition: background 200ms ease-out, color 200ms ease-out;
+}
+
+/* The fill, inset by the border width. */
+.lang::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  clip-path: var(--bevel);
+  background: var(--color-surface);
+  transition: background 200ms ease-out;
+}
+
+/* Each language. Both are padded alike, so the toggle never changes width. */
+.lang > span {
+  position: relative;
+  padding: 0.32rem 0.45rem;
+
+  --c: 5px;
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--c)) 0,
+    100% var(--c),
+    100% 100%,
+    var(--c) 100%,
+    0 calc(100% - var(--c))
+  );
+}
+
+/* Latin letters get a little air; Arabic is a joined script and gets none. */
+.lang [lang="en"] {
+  letter-spacing: 0.06em;
+}
+
+.lang:hover {
+  background: var(--color-emerald);
+  color: var(--color-ink);
+}
+
+.lang:hover::before {
+  background: color-mix(in srgb, var(--color-emerald) 8%, var(--color-surface));
+}
+
+/* clip-path crops any outline, so focus thickens the border instead. */
+.lang:focus-visible {
+  outline: none;
+  background: var(--color-mint);
+}
+
+.lang:focus-visible::before {
+  inset: 3px;
+}
+
+/* The current language: a chip in the brand green, dark type on it
+   (8:1), the same over the hero and on the solid bar. */
+.on {
+  font-weight: 600;
+  color: #04130c;
+  background: #2fd08a;
+}
+
+/* The cuts move to the other corners in Arabic, as the quote button's do. */
+[dir="rtl"] .lang {
+  --bevel: polygon(
+    var(--b) 0,
+    100% 0,
+    100% calc(100% - var(--b)),
+    calc(100% - var(--b)) 100%,
+    0 100%,
+    0 var(--b)
+  );
+}
+
+[dir="rtl"] .lang > span {
+  clip-path: polygon(
+    var(--c) 0,
+    100% 0,
+    100% calc(100% - var(--c)),
+    calc(100% - var(--c)) 100%,
+    0 100%,
+    0 var(--c)
+  );
+}
+
+/* ------------------------------------------------------- notched CTA -- */
+
+.quote {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.15rem;
+  font-size: var(--text-fluid-sm);
+  font-weight: 500;
+  color: var(--color-ink);
+  white-space: nowrap;
+
+  /* Cut the top-end and bottom-start corners — the CODEMETAL bevel. */
+  --b: 11px;
+  --bevel: polygon(
+    0 0,
+    calc(100% - var(--b)) 0,
+    100% var(--b),
+    100% 100%,
+    var(--b) 100%,
+    0 calc(100% - var(--b))
+  );
+  clip-path: var(--bevel);
+  background: color-mix(in srgb, var(--color-ink) 30%, transparent);
+  transition: background 200ms ease-out, color 200ms ease-out;
+}
+
+/* The fill, inset by the border width. */
+.quote::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  clip-path: var(--bevel);
+  background: var(--color-surface);
+  transition: background 200ms ease-out;
+}
+
+.quote > * {
+  position: relative;
+}
+
+.quote:hover {
+  background: var(--color-emerald);
+  color: var(--color-mint);
+}
+
+.quote:hover::before {
+  background: color-mix(in srgb, var(--color-emerald) 8%, var(--color-surface));
+}
+
+/* clip-path crops any outline, so focus has to thicken the border instead. */
+.quote:focus-visible {
+  outline: none;
+  background: var(--color-mint);
+}
+
+.quote:focus-visible::before {
+  inset: 3px;
+}
+
+.arrow {
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.quote:hover .arrow {
+  transform: translate(2px, -2px);
+}
+
+/* The cut belongs on the trailing top corner, so it swaps sides with the
+   reading direction rather than staying pinned to the right. */
+[dir="rtl"] .quote {
+  --bevel: polygon(
+    var(--b) 0,
+    100% 0,
+    100% calc(100% - var(--b)),
+    calc(100% - var(--b)) 100%,
+    0 100%,
+    0 var(--b)
+  );
+}
+
+/* RTL points the arrow up-and-left instead. */
+[dir="rtl"] .arrow {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .quote:hover .arrow {
+  transform: scaleX(-1) translate(2px, -2px);
+}
+
+/* -------------------------------------------------------------- mobile -- */
+
+.burger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--color-hairline);
+  border-radius: calc(infinity * 1px); /* = Tailwind rounded-full, one value site-wide */
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+@media (min-width: 64rem) {
+  .burger {
+    display: none;
+  }
+}
+
+/*
+ * Hangs below the bar rather than stretching it, so opening the menu costs no
+ * layout at all — the panel animates on opacity and transform only.
+ */
+.panel {
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  overflow: hidden;
+  border-top: 1px solid var(--color-hairline);
+  background: var(--color-bg);
+}
+
+@media (min-width: 64rem) {
+  .panel {
+    display: none;
+  }
+}
+
+.panelInner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-block: var(--spacing-block);
+}
+
+.panelLink {
+  padding: 0.75rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: var(--text-fluid-base);
+  color: var(--color-ink);
+  transition: background 200ms ease-out, color 200ms ease-out;
+}
+
+.panelLink:hover {
+  background: var(--color-surface-2);
+  color: var(--color-mint);
+}
+
+.panelFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-hairline);
+}
